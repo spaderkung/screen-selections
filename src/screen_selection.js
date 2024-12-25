@@ -1,4 +1,5 @@
-/** Event type for the box region selector.
+/** 
+ * Event type for the box region selector.
  * 
  */
 class BoxRegionSelectorEvent {
@@ -9,7 +10,8 @@ class BoxRegionSelectorEvent {
   ctrl = false
 }
 
-/** Mouse selection of a box region.
+/** 
+ * Mouse selection of a box region.
  * 
  * Add event listeners for an BoxRegionSelectorEvent or read the event_info, which is either 
  * null or contains an event.
@@ -42,35 +44,37 @@ class BoxRegionSelector {
   #dragging_event_callbacks = []
   #dragged_event_callbacks = []
 
-  /** bool - True for the first drag
+  /** 
    * @return {boolean} True for the first drag
    */
   get drags() {
     return this.#drags
   }
 
-  /** bool - True during dragging
+  /**
    * @return {boolean} True during dragging
    */
   get dragging() {
     return this.#dragging
   }
 
-  /** bool - True at the end of drag
+  /**
    * @return {boolean} True at the end of drag
    */
   get dragged() {
     return this.#dragged
   }
 
-  /** The returned BoxRegionSelectorEvent
+  /** 
+   * The returned BoxRegionSelectorEvent
    *
    */
   get event_info() {
     return this.#event_info
   }
 
-  /** Add event callback
+  /** 
+   * Add event callback
    *
    * @param {object} f Your callback method
    * @param {string} type The BoxRegion.EVENT_TYPE
@@ -93,7 +97,8 @@ class BoxRegionSelector {
     return added
   }
 
-  /** Remove event callback
+  /** 
+   * Remove event callback
    *
    * @param {object} f Your callback method
    * @param {string} [type] Optional: The BoxRegion.EVENT_TYPE
@@ -128,7 +133,8 @@ class BoxRegionSelector {
     return removed
   }
 
-  /** Update - call continuously.
+  /** 
+   * Update - call continuously.
    *
    * @param {array<number, number>} mouse_coord
    * @param {boolean} mouse_pressed
@@ -252,7 +258,8 @@ class BoxRegionSelector {
     }
   }
 
-  /** Private method for adding a callback from a set of callbacks.
+  /** 
+   * Private method for adding a callback from a set of callbacks.
    *
    * @param {*} list
    * @param {*} f
@@ -267,7 +274,8 @@ class BoxRegionSelector {
     return false
   }
 
-  /** Private method for removing a callback from a set of callbacks.
+  /** 
+   * Private method for removing a callback from a set of callbacks.
    *
    * @param {*} list
    * @param {*} f
@@ -283,7 +291,8 @@ class BoxRegionSelector {
   }
 }
 
-/** A box region sprite selector for p5.play.
+/** 
+ * A box region sprite selector for p5.play.
  * 
  * Once an area is selected the sprites from the sprite pool Group that 
  * are within the area are added to the selected Group.
@@ -334,7 +343,8 @@ class BoxRegionSpriteSelector {
     )
   }
 
-  /** Callback for completed drag.
+  /** 
+   * Callback for completed drag.
    *
    * Define callback method as a class property using an arrow function.
    * This ensures that the "this" context is bound to the class instance.
@@ -360,7 +370,8 @@ class BoxRegionSpriteSelector {
     }
   }
 
-  /** Clears the selected Group.
+  /** 
+   * Clears the selected Group.
    *
    * If debug: sets the Sprites colors to the "off" color.
    */
@@ -373,7 +384,8 @@ class BoxRegionSpriteSelector {
     this.selected = new Group()
   }
 
-  /** Determines if a point is within a box region.
+  /** 
+   * Determines if a point is within a box region.
    *
    *
    * @param {number[2]} p Point to check.
