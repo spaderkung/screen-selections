@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ESNext"
+  },
+  "include": [
+    "*.js",
+    "**/*.js",
+    "../_node_modules/@types/p5/global.d.ts",
+    "../_p5_reference/p5play.d.ts",
+    "../_q5_reference/q5.d.ts",
+  ]
+}

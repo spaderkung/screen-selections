@@ -1,0 +1,24 @@
+{
+  "name": "screen-selections-jb",
+  "version": "1.0.0",
+  "description": "Region selections \u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5DMouse \u001b[3~region selection classes for use in any project or p5, p5 play projects.\u001b[B\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[A\u001b[C\u001b[C\u001b[C\u001b[D\u001b[3~.",
+  "keywords": [
+    "screen",
+    "selections",
+    "mouse",
+    "js",
+    "p5",
+    "p5.play"
+  ],
+  "license": "GPL",
+  "author": "Jon Bolmstedt",
+  "type": "module",
+  "main": "\u0016screen_selection.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {}
+}
