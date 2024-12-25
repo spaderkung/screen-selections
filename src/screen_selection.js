@@ -14,7 +14,7 @@ class BoxRegionSelectorEvent {
  * Add event listeners for an BoxRegionSelectorEvent or read the event_info, which is either 
  * null or contains an event.
  * 
- * Call update(...) with parameters continuously.
+ * Call update(...) with mouse info continuously.
  * 
  * If a callback for event listeners is within a class instance, it must be defined as:
  * 
@@ -43,21 +43,21 @@ class BoxRegionSelector {
   #dragged_event_callbacks = []
 
   /** bool - True for the first drag
-   *
+   * @return {boolean} True for the first drag
    */
   get drags() {
     return this.#drags
   }
 
   /** bool - True during dragging
-   *
+   * @return {boolean} True during dragging
    */
   get dragging() {
     return this.#dragging
   }
 
   /** bool - True at the end of drag
-   *
+   * @return {boolean} True at the end of drag
    */
   get dragged() {
     return this.#dragged
@@ -254,7 +254,7 @@ class BoxRegionSelector {
 
   /** Private method for adding a callback from a set of callbacks.
    *
-   * @param {*} arr
+   * @param {*} list
    * @param {*} f
    * @return {boolean} True if success
    */
@@ -269,7 +269,7 @@ class BoxRegionSelector {
 
   /** Private method for removing a callback from a set of callbacks.
    *
-   * @param {*} arr
+   * @param {*} list
    * @param {*} f
    * @return {boolean} True if success
    */
