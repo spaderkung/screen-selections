@@ -5,7 +5,11 @@ JS clases for mouse region selections and selection of p5.play sprites.
 
 ## `class BoxRegionSelectorEvent`
 
+Event type for the box region selector.
+
 ## `class BoxRegionSelector`
+
+Mouse selection of a box region.
 
 Add event listeners for an BoxRegionSelectorEvent or read the event_info, which is either null or contains an event.
 
@@ -33,7 +37,11 @@ Or else the "this" context is lost when processing the callback.
 
 ## `get event_info()`
 
+The returned BoxRegionSelectorEvent
+
 ## `add_event_callback(f, type)`
+
+Add event callback
 
  * **Parameters:**
    * `f` — `object` — Your callback method
@@ -41,11 +49,15 @@ Or else the "this" context is lost when processing the callback.
 
 ## `remove_event_callback(f, type)`
 
+Remove event callback
+
  * **Parameters:**
    * `f` — `object` — Your callback method
    * `[type]` — `string` — Optional: The BoxRegion.EVENT_TYPE
 
 ## `update(mouse_coord, mouse_pressed, key_shift, key_alt, key_ctrl)`
+
+Update - call continuously.
 
  * **Parameters:**
    * `{array<number,` — mouse_coord
@@ -56,6 +68,8 @@ Or else the "this" context is lost when processing the callback.
 
 ## `#add_callback(list, f)`
 
+Private method for adding a callback from a set of callbacks.
+
  * **Parameters:**
    * `list` — `*` — 
    * `f` — `*` — 
@@ -63,12 +77,16 @@ Or else the "this" context is lost when processing the callback.
 
 ## `#remove_callback(list, f)`
 
+Private method for removing a callback from a set of callbacks.
+
  * **Parameters:**
    * `list` — `*` — 
    * `f` — `*` — 
  * **Returns:** `boolean` — True if success
 
 ## `class BoxRegionSpriteSelector`
+
+A box region sprite selector for p5.play.
 
 Once an area is selected the sprites from the sprite pool Group that are within the area are added to the selected Group.
 
@@ -85,15 +103,21 @@ Call continuously.
 
 ## `on_box_dragged = (e) =>`
 
+Callback for completed drag.
+
 Define callback method as a class property using an arrow function. This ensures that the "this" context is bound to the class instance.
 
  * **Parameters:** `e` — `*` — 
 
 ## `clear_selection()`
 
+Clears the selected Group.
+
 If debug: sets the Sprites colors to the "off" color.
 
 ## `point_within_box(p, box)`
+
+Determines if a point is within a box region.
 
  * **Parameters:**
    * `p` — `number[2]` — Point to check.
