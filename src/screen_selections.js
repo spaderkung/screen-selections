@@ -1,9 +1,4 @@
 /**
- * @module screen-selections
- * @description A collection of utility methods for selections on the screen.
- */
-
-/**
  * Event type for the box region selector.
  *
  */
@@ -419,4 +414,3 @@ class BoxRegionSpriteSelector {
   }
 }
 
-export { BoxRegionSelectorEvent, BoxRegionSelector, BoxRegionSpriteSelector}

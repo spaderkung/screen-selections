@@ -12,7 +12,7 @@
   ],
   "license": "GPL",
   "author": "Jon Bolmstedt",
-  "type": "module",
+  "type": "commonjs",
   "main": "\u0016screen_selections.js",
   "directories": {
     "test": "tests"
