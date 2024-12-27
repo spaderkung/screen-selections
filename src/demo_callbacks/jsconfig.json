@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ESNext"
+  },
+  "include": [
+    "*.js",
+    "**/*.js",
+    "../_libs_extern/q5.d.ts",
+    "../_libs_extern/@types/p5/literals.d.ts",
+    "../_libs_extern/@types/p5/index.d.ts",
+    "../_libs_extern/@types/p5/global.d.ts",
+    "../_libs_extern/p5play.d.ts",
+    "../_libs_extern/planck.d.ts",
+    "../screen_selections.js",
+  ]
+}

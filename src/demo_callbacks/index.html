@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>p5 js</title>
+    <!-- Absolute online version of P5 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js" integrity="sha512-kSvJqUQUrW819ZGEnJKH6dwr8XmNBP509Puwtuj1TdY9SasSuY2enn+e7NcbVChql/ZFcDAicGSzDztq5hQCEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.js"></script>	    -->
+
+    <!-- Latest online version of q5 instead of p5 -->
+    <!-- <script src="https://q5js.org/q5.js"></script> -->
+     
+    <!-- Latest online version of 3.x f p5.play -->
+    <script src="https://p5play.org/v3/planck.min.js"></script>
+    <script src="https://p5play.org/v3/p5play.js"></script>
+	   
+    <!-- Local files - start web server in the top parent directory for access
+      Add a path to the library in the jsconfig.json (see below) for VS Code intellisense to work. -->
+
+    <script src="../screen_selections.js"></script>
+
+    <!-- Local versions of P5 can bes used as well -->
+    <!--
+      <script src="../_P5 Reference/p5.js"></script>
+      <script src="../_P5 Reference/addons/p5.sound.js"></script>
+    -->
+
+    <!-- Finally the sketch -->
+    <script src="sketch.js"></script>
+  </head>
+  <body bgcolor="#101010"></body>
+
+</html>
+
+<!-- Type definitions: so that VS Code can have intellisense to the files.
+
+Project
+|- index.html
+|- jsconfig.json
+|- sketch.js
+
+Add a jsconfig.json to the project folder and point to the locations.
+p5 does not come with definitions so there is another github project that generates them.
+
+{
+  "compilerOptions": {
+    "target": "ESNext"
+  },
+  "include": [
+    "*.js",
+    "**/*.js",
+    "../_libs_extern/q5.d.ts",
+    "../_libs_extern/@types/p5/literals.d.ts",
+    "../_libs_extern/@types/p5/index.d.ts",
+    "../_libs_extern/@types/p5/global.d.ts",
+    "../_libs_extern/p5play.d.ts",
+    "../_libs_extern/planck.d.ts",
+  ]
+}
+
+
+
+-->
+
+<!--
+// To read files or images, a local web server must be used.
+// https://simplewebserver.org/download.html//
+
+// Instead of running index.html, surf to for instance http://127.0.0.1:8887
+//   or whatever the web server was configured for. 
+-->
+
