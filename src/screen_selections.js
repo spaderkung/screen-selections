@@ -510,10 +510,10 @@ class BoxRegionSpriteSelector {
     // First press down deselects all, unless a sprite is under the mouse.
     if (mouse.presses() || this.#single_click_detection()) {
       // Get sprite under the mouse from physics body or coordinates.
-      let sprite = this.#get_sprite_at_pos(mouse)
+      let sprite = BoxRegionSpriteSelector.get_sprite_at_mouse_pos(this.pool, this.single_selection_radius)
 
-      // Disable box region selection if a sprite was clicked and dragged. A box region selection starts
-      // only if the drag started from a blank space.
+      // Disable box region selection if a sprite was clicked and dragged. A box region selection
+      // starts only if the drag started from a blank space.
       if (
         mouse.presses() &&
         sprite !== undefined &&
@@ -545,9 +545,11 @@ class BoxRegionSpriteSelector {
     }
 
     // Region selection
+    // Must use screen coordinates if the built-in debug draw is used.
+    // Uses screen coordinates, and this is compensated for in the callback on_box_dragged.
     if (this.#perform_box_update) {
       this.#box_selector.update(
-        [mouse.x, mouse.y],
+        [mouse.canvasPos.x, mouse.canvasPos.y],
         mouse.pressing(),
         kb.pressing("shift") > 0,
         kb.pressing("alt") > 0,
@@ -561,16 +563,23 @@ class BoxRegionSpriteSelector {
   }
 
   /**
-   * Gets a sprite at position.
-   * @param {object} p
+   * If a sprite has a physics body: the world position is used.
+   * 
+   * If not: screen position closer than .single_selection_radius
+   * 
+   * @param {Sprite[]} sprite_pool 
+   * @param {number} [d] Allowed screen distance to sprite. Used only if no physics body.
    */
-  #get_sprite_at_pos(p) {
+  static get_sprite_at_mouse_pos(sprite_pool, d = 5) {
     let sprite = world.getSpriteAt(mouse)
     if (sprite === undefined) {
       // No physics body - use distance to anchor point.
-      for (let i = 0; i < this.pool.length; i += 1) {
-        if (this.pool[i].distanceTo(mouse) <= this.single_selection_radius) {
-          sprite = this.pool[i]
+      for (let i = 0; i < sprite_pool.length; i += 1) {
+        if (dist(
+          sprite_pool[i].canvasPos.x, sprite_pool[i].canvasPos.y, 
+          mouse.canvasPos.x, mouse.canvasPos.y
+        ) <= d) {
+          sprite = sprite_pool[i]
           break
         }
       }
@@ -580,14 +589,15 @@ class BoxRegionSpriteSelector {
 
   /**
    * Callback for completed drag.
-   *
+   * 
    * Define callback method as a class property using an arrow function.
    * This ensures that the "this" context is bound to the class instance.
-   * @param {*} e
+   * @param {BoxRegionSelectorEvent} e
    */
   #on_box_dragged = (e) => {
     for (let sprite of this.pool) {
-      if (this.#point_within_box([sprite.x, sprite.y], e.region)) {
+      // Convert to world coordinates since the region selector uses screen coordinates.
+      if (BoxRegionSpriteSelector.point_within_box([sprite.canvasPos.x, sprite.canvasPos.y], e.region)) {
         if (e.alt) {
           this.remove_sprite_from_selection(sprite)
         } else {
@@ -605,7 +615,7 @@ class BoxRegionSpriteSelector {
    * @param {number[4]} box Region with any two opposing corners.
    * @returns {boolean} True: within, False: Outside or on border.
    */
-  #point_within_box(p, box) {
+  static point_within_box(p, box) {
     // Flip region if it's not top-left to bottom-right.
     let b = [box[0], box[1], box[2], box[3]]
     if (box[0] > box[2]) {
@@ -647,5 +657,311 @@ class BoxRegionSpriteSelector {
       this.#single_mem = false
     }
     return false
+  }
+}
+
+/**
+ * Various possibilities for snapping.
+ * 
+ * snap_to_grid(pos, grid_size) can be used as a static method.
+ *  
+ * Configurations (used only in the user program):
+ * 
+ * snap_screen: Snap to screen coordinates (default)
+ * 
+ * snap_relative: Snap to relative movement
+ * 
+ * Usage:
+ * Snap to screen: 
+ * 
+ * snapped_pos = snap_to_grid(pos, grid_size)
+ * 
+ * Usage:
+ * Snap relative:
+ * 
+ * First calculate the mouse (or object) relative movement: 
+ * pos_relative = current_pos - pos_start
+ * 
+ * Then call snap_to_grid, but then add the snapped relative position: 
+ * object_pos = snapped_pos + pos_start
+ * 
+ * @author Jon Bolmstedt
+ */
+class Snapper {
+  #snap_screen = true
+  #snap_relative = false
+
+  // Getter, setter for snap_screen
+  get snap_screen() {
+    return this.#snap_screen
+  }
+
+  set snap_screen(value) {
+    this.#reset_options()
+    this.#snap_screen = value
+  }
+
+  // Getter, setter for snap_relative
+  get snap_relative() {
+    return this.#snap_relative
+  }
+
+  set snap_relative(value) {
+    this.#reset_options()
+    this.#snap_relative = value
+  }
+
+  /** Snaps to grid
+   * Snaps to grid
+   * @param {number[]} pos
+   * @param {number[]} grid_size
+   */
+  static snap_to_grid(pos, grid_size) {
+    // Round to discrete coordinates.
+    let gs = this.#make_grid(pos, grid_size)
+
+    let snapped_pos = []
+    for (let i in pos) {
+      snapped_pos.push(Math.floor(pos[i] / gs[i]) * gs[i])
+    }
+    return snapped_pos
+  }
+  
+  /** Returns a grid array with the same dimension as the coordinates.
+   * Returns a grid array with the same dimension as the coordinates.
+   * @param {*} pos
+   * @param {*} grid_zize
+   * @returns
+   */
+  static #make_grid(pos, grid_zize) {
+    let gs = []
+    if (grid_zize.length < pos.length) {
+      for (let i in pos) {
+        gs.push(grid_zize[0])
+      }
+    } else {
+      for (let i in pos) {
+        gs.push(grid_zize[i])
+      }
+    }
+
+    return gs
+  }
+
+  #reset_options() {
+    console.info("resetting")
+    this.#snap_relative = false
+    this.#snap_screen = false
+  }
+}
+
+/** Blender-like key controls for moving.
+ * Blender-like key controls for moving.
+ * 
+ * Provide a collection of objects to have their .x, .y affected by mouse movement or
+ * keyboard input (e.g., 123.45).
+ * 
+ * Call update() in main loop.
+ * 
+ * g: Start moving
+ * 
+ * x: Constrain to x-direction
+ * 
+ * y: Constrain to y-direction
+ * 
+ * esc, rmb: cancel
+ * 
+ * @param {Object[]} selected A collection of Objects with .x, .y to be affected by the move.
+ * @author Jon Bolmstedt
+ */
+class KeyMoves {
+  #moving = false
+  #moving_start_mem = false
+  #moving_started = false
+  #moving_completed = false
+  #moving_start_mouse_coords = false
+  #collect_input_distance_x = false
+  #collect_input_distance_y = false
+  #input = ""
+
+  /** Provide a collection of objects to have their .x, .y affected by mouse movement
+   * Provide a collection of objects to have their .x, .y affected by mouse movement
+   * @type {Sprite[]}
+   */
+  selected = []
+
+  /** (optional) Provide a snapper configuration
+   * (optional) Provide a snapper configuration
+   * @type {Snapper}
+   */
+  snapper = {}
+
+  /** True once when movement starts.
+   * True once when movement starts.
+   */
+  get move_started() {
+    return this.#moving_started
+  }
+
+  /** True once when movement completes.
+   * True once when movement completes.
+   */
+  get move_completed() {
+    return this.#moving_completed
+  }
+
+  /** Call in the main loop. Detects keys and mouse.
+   * Call in the main loop. Detects keys and mouse.
+   *
+   * Provide a list of objects to be moved in .selected.
+   *
+   */
+  update() {
+    // Reset events
+    this.#moving_started = false
+    this.#moving_completed = false
+
+    // Select move
+    if (kb.presses("g")) {
+      this.#moving = true
+    } else if (kb.presses("x") && this.#moving) {
+      // Input x-offset
+      // Constrain to x
+      // console.info("Constrain to x")
+      this.#collect_input_distance_x = true
+      this.#collect_input_distance_y = false
+      this.#input = ""
+    } else if (kb.presses("y") && this.#moving) {
+      // console.info("Constrain to y")
+      // Input y-offset
+      // Constrain to y
+      this.#collect_input_distance_y = true
+      this.#collect_input_distance_x = false
+      this.#input = ""
+    }
+
+    // Collect offset
+    if (this.#collect_input_distance_x || this.#collect_input_distance_y) {
+      this.#collect()
+    }
+
+    // Move it
+    if (this.#moving) {
+      // Edge in start coords
+      if (this.#moving_start_mem === false) {
+        // console.info("edge")
+        this.#moving_start_mem = true
+        this.#moving_started = true
+        this.#moving_start_mouse_coords = createVector(mouseX, mouseY)
+
+        for (let sprite of this.selected) {
+          sprite.key_moves_start_coords = createVector(sprite.x, sprite.y)
+        }
+      }
+
+      // Offset selections while moving
+      let mouse_diff = p5.Vector.sub(createVector(mouseX, mouseY), this.#moving_start_mouse_coords)
+      for (let sprite of this.selected) {
+        if (this.#collect_input_distance_y) {
+          mouse_diff.x = 0
+        }
+        if (this.#collect_input_distance_x) {
+          mouse_diff.y = 0
+        }
+        sprite.x = sprite.key_moves_start_coords.x + mouse_diff.x
+        sprite.y = sprite.key_moves_start_coords.y + mouse_diff.y
+
+        // Snap to screen grid
+        // Positions the next movement at the same screen spacing.
+        // Will not maintain the relative coordinates of several objects moved together.
+        if (kb.pressing("ctrl") || this.snapper.snap_screen) {
+          // Snap to screen grid
+          let snapped = Snapper.snap_to_grid([sprite.x, sprite.y], GRID_SIZE)
+          sprite.x = snapped[0]
+          sprite.y = snapped[1]
+
+        } 
+        else if (this.snapper.snap_relative) {
+          // Snap to movement grid
+          // Equates to calculating and snapping the mouse movement, and adding
+          // that offset to the original object coordinates.
+          let snapped = Snapper.snap_to_grid([mouse_diff.x, mouse_diff.y], GRID_SIZE)
+          sprite.x = sprite.key_moves_start_coords.x + snapped[0]
+          sprite.y = sprite.key_moves_start_coords.y + snapped[1]
+        }
+      }
+
+      // Moving completed
+      if (mouse.presses()) {
+        this.#moving = false
+      } 
+      else if (kb.presses("enter") && (this.#collect_input_distance_x || this.#collect_input_distance_y)) {
+        this.#moving = false
+
+        // Use the input offset that was entered by keyboard.
+        let n
+        try {
+          n = Number(this.#input)
+        } catch (e) {}
+
+        if (n !== undefined) {
+          if (this.#collect_input_distance_x) {
+            for (let sprite of this.selected) {
+              sprite.x += n
+            }
+          } else if (this.#collect_input_distance_y) {
+            for (let sprite of this.selected) {
+              sprite.y += n
+            }
+          }
+        }
+      } 
+      else if (kb.presses("escape") || mouse.right) {
+        this.#moving = false
+
+        // Abort and reset coords
+        for (let sprite of this.selected) {
+          sprite.x = sprite.key_moves_start_coords.x
+          sprite.y = sprite.key_moves_start_coords.y
+        }
+      }
+    } else {
+      this.#moving_start_mem = false
+      this.#collect_input_distance_x = false
+      this.#collect_input_distance_y = false
+    }
+  }
+
+  /** Collects offset info
+   * Collects offset info
+   */
+  #collect() {
+    if (kb.presses("0")) {
+      this.#input += "0"
+    } else if (kb.presses("1")) {
+      this.#input += "1"
+    } else if (kb.presses("2")) {
+      this.#input += "2"
+    } else if (kb.presses("3")) {
+      this.#input += "3"
+    } else if (kb.presses("4")) {
+      this.#input += "4"
+    } else if (kb.presses("5")) {
+      this.#input += "5"
+    } else if (kb.presses("6")) {
+      this.#input += "6"
+    } else if (kb.presses("7")) {
+      this.#input += "7"
+    } else if (kb.presses("8")) {
+      this.#input += "8"
+    } else if (kb.presses("9")) {
+      this.#input += "9"
+    } else if (kb.presses(".")) {
+      this.#input += "."
+    } else if (kb.presses(",")) {
+      this.#input += ","
+    } else if (kb.presses("-")) {
+      this.#input += "-"
+    }
   }
 }

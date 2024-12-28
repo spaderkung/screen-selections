@@ -393,17 +393,20 @@ function setup()
 }
 
 
-// p5 play method called before draw()
-function update() {
-
-}
-
-
 // Reserved name for P5 library. This function will be called repeatedly.
 function draw() {
-  background("#131516");
-  
+  background("#131516")
+
   sprite_selector.update()
+
+  // Drag the canvas
+  if (mouse.pressing("middle")) {
+    if (camera) {
+      // Reposition camera with x, y. Using pos.x, y messes everything up.
+      camera.x -= movedX
+      camera.y -= movedY
+    }
+  }
 }
 
 
