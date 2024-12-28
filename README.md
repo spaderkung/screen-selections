@@ -1,9 +1,9 @@
 # Screen selection utilities
 <ul>
-<li>Drag canvas with MMB</li>
-<li>Toggle snapping with s</li>
-<li>Select sprites with mouse</li>
-<li>Move with g</li>
+<li>Drag canvas.</li>
+<li>Optional Snap to screen or movement.</li>
+<li>Move with g.</li>
+<li>Select sprites with mouse. Shift / Alt to add/ remove.</li>
 </ul>
 
 ![](https://github.com/spaderkung/screen-selections-jb/blob/main/demos/BoxRegionSpriteSelector.gif)
