@@ -982,3 +982,74 @@ class KeyMoves {
     }
   }
 }
+
+
+/** Drags the canvas by moving the p5.play camera.
+ * Drags the canvas by moving the p5.play camera.
+ * 
+ * Usage:
+ * Call update(...) in the game loop.
+ * 
+ * @param {*} camera
+ * @param {boolean} dragging E.g., mouse.pressing("middle")
+ * @param {object} pos E.g., {x: mouseX, y:mouseY}
+ * 
+ * @author Jon Bolmstedt
+ */
+class CanvasDragger {
+  /** True once
+   * @type {boolean}
+   */
+  drag_complete
+
+  /** True once
+   * @type {boolean}
+   */
+  drag_started
+
+  #drag_start_mem = false
+  #drag_start_pos = { x: 0, y: 0 }
+  #camera_start_pos = { x: 0, y: 0 }
+  #mouse_diff = {}
+
+  /** Call in the game loop.
+   * Call in the game loop.
+   *
+   * @param {*} camera
+   * @param {boolean} dragging E.g., mouse.pressing("middle")
+   * @param {object} pos E.g., {x: mouseX, y:mouseY}
+   */
+  update(camera, dragging, pos) {
+    // Reset events
+    this.drag_complete = false
+    this.drag_started = false
+
+    if (dragging) {
+      if (this.#drag_start_mem === false) {
+        this.#drag_start_mem = true
+
+        this.#drag_start_pos.x = pos.x
+        this.#drag_start_pos.y = pos.y
+
+        this.#camera_start_pos.x = camera.x
+        this.#camera_start_pos.y = camera.y
+      }
+      if (camera) {
+        // Reposition camera with x, y. NOT Using pos.x, pos.y messes everything up.
+
+        // Accumulated movement during the drag.
+        this.#mouse_diff.x = pos.x - this.#drag_start_pos.x
+        this.#mouse_diff.y = pos.y - this.#drag_start_pos.y
+
+        camera.x = this.#camera_start_pos.x - this.#mouse_diff.x
+        camera.y = this.#camera_start_pos.y - this.#mouse_diff.y
+      }
+    } 
+    else {
+      if (this.#drag_start_mem) {
+        this.#drag_start_mem = false
+        this.drag_complete = true
+      }
+    }
+  }
+}
