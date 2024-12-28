@@ -6,6 +6,8 @@
 <li>Select sprites with mouse. Shift / Alt to add/ remove.</li>
 </ul>
 
+Example with p5.play sprites, but any object with {x:, y:} can be modified.
+
 ![](https://github.com/spaderkung/screen-selections-jb/blob/main/demos/BoxRegionSpriteSelector.gif)
 
 # Documentation
