@@ -1,3 +1,13 @@
+# Screen selection utilities
+<ul>
+<li>Drag canvas with MMB</li>
+<li>Toggle snapping with s</li>
+<li>Select sprites with mouse</li>
+<li>Move with g</li>
+</ul>
+
+![](https://github.com/spaderkung/screen-selections-jb/blob/main/demos/BoxRegionSpriteSelector.gif)
+
 # Documentation
 
 # `class BoxRegionSelector`
