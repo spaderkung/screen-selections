@@ -59,24 +59,6 @@ Update - call continuously.
    * `[key_alt]` — `boolean` — 
    * `[key_ctrl]` — `boolean` — 
 
-## `#add_callback(list, f)`
-
-Private method for adding a callback from a set of callbacks.
-
- * **Parameters:**
-   * `list` — `*` — 
-   * `f` — `*` — 
- * **Returns:** `boolean` — True if success
-
-## `#remove_callback(list, f)`
-
-Private method for removing a callback from a set of callbacks.
-
- * **Parameters:**
-   * `list` — `*` — 
-   * `f` — `*` — 
- * **Returns:** `boolean` — True if success
-
 # `class BoxRegionSpriteSelector`
 
 A box region sprite selector for p5.play.
