@@ -6,8 +6,6 @@ Mouse selection of a box region.
 
 Add event listeners for an BoxRegionSelectorEvent or read the event_info, which is either null or contains an event.
 
-Call update(...) with mouse info continuously.
-
 If a callback for event listeners is within a class instance, it must be defined as:
 
 on_box_dragged = (e) => { ... }
@@ -15,6 +13,9 @@ on_box_dragged = (e) => { ... }
 Or else the "this" context is lost when processing the callback.
 
  * **Author:** Jon Bolmstedt
+
+## `usage`
+Call update(...) with mouse info continuously.
 
 ## `get drags()`
 
@@ -67,8 +68,6 @@ Shift - Add single sprite or a region Alt - Remove single sprite or a region
 
 Once an area is selected the sprites from the sprite pool Group that are within the area are added to the selected Group. If no pool group is specified then the allSprites Group is used.
 
-Usage: Call update() without parameters in the game loop.
-
 Read selected
 
  * **Parameters:**
@@ -78,6 +77,8 @@ Read selected
    * `debug_color_selected` — `string` — Color for the selected sprites in debug mode
  * **Author:** Jon Bolmstedt
 
+## `usage`
+Call update() without parameters in the game loop.
 
 # `class Snapper`
 
@@ -110,8 +111,6 @@ Blender-like key controls for moving.
 
 Provide a collection of objects to have their .x, .y affected by mouse movement or keyboard input (e.g., 123.45).
 
-Call update() in main loop.
-
 g: Start moving
 
 x: Constrain to x-direction
@@ -122,6 +121,9 @@ esc, rmb: cancel
 
  * **Parameters:** `selected` — `Object[]` — A collection of Objects with .x, .y to be affected by the move.
  * **Author:** Jon Bolmstedt
+
+## `usage`
+Call update() in main loop.
 
 ## `selected = []`
 
