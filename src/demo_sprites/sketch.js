@@ -39,29 +39,33 @@ const palette_vs_code_dark = [
 ]
 
 
-const sprite_selector = new BoxRegionSpriteSelector()
-const snapper = new Snapper()
-const key_moves = new KeyMoves()
-key_moves.snapper = snapper
-snapper.snap_relative = true
-snapper.GRID_SIZE = [10, 10]
-key_moves.selected = sprite_selector.selected
-const canvas_dragger = new CanvasDragger()
+let sprite_selector
+let snapper
+let key_moves
+let canvas_dragger
 
 // Reserved name for P5 library. This function will be called once.
-function setup() 
-{
+function setup() {
   frameRate(50)
-  createCanvas(600, 600);
-  console.log("Drag canvas with MMB");
-  console.log("Toggle snapping with s");
-  console.log("Select sprites with mouse");
-  console.log("Move with g");
+  createCanvas(windowWidth, windowHeight * 0.75)
+  console.log("Drag canvas with MMB")
+  console.log("Toggle snapping with s")
+  console.log("Select sprites with mouse")
+  console.log("Move with g")
+
+  sprite_selector = new BoxRegionSpriteSelector()
+  snapper = new Snapper()
+  key_moves = new KeyMoves()
+  key_moves.snapper = snapper
+  key_moves.snapper.snap_relative = true
+  key_moves.snapper.GRID_SIZE = [10, 10]
+  key_moves.selected = sprite_selector.selected
+  canvas_dragger = new CanvasDragger()
 
   // Test sprites
   for (let i = 0; i < 20; i++) {
-    let x = random(width*0.15, width*0.85)
-    let y = random(height*0.15, height*0.85)
+    let x = random(width * 0.15, width * 0.85)
+    let y = random(height * 0.15, height * 0.85)
     let s = new Sprite(x, y, 15, "k")
     s.strokeWeight = 0
     s.fill = random(palette_vs_code_dark)
