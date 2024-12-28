@@ -375,13 +375,23 @@ class xBoxRegionSpriteSelector {
 
 
 let sprite_selector = new BoxRegionSpriteSelector()
+let snapper = new Snapper()
+let key_moves = new KeyMoves()
+key_moves.snapper = snapper
+snapper.snap_relative = true
+snapper.GRID_SIZE = [10, 10]
+key_moves.selected = sprite_selector.selected
+
 
 // Reserved name for P5 library. This function will be called once.
 function setup() 
 {
   frameRate(50)
   createCanvas(600, 600);
-  console.log("ok");
+  console.log("Drag canvas with MMB");
+  console.log("Toggle snapping with s");
+  console.log("Select sprites with mouse");
+  console.log("Move with g");
 
   // Test sprites
   for (let i = 0; i < 20; i++) {
@@ -398,6 +408,21 @@ function draw() {
   background("#131516")
 
   sprite_selector.update()
+  key_moves.update()
+
+  // Toggle snapping
+  if (kb.presses("s")) {
+    if (snapper.snap_relative) {
+      snapper.snap_screen = true
+    }
+    else if (snapper.snap_screen) {
+      snapper.snap_screen = false
+    }
+    else {
+      snapper.snap_relative = true
+    }
+    console.log(`Snapper screen: ${snapper.snap_screen}, relative: ${snapper.snap_relative}`)
+  }
 
   // Drag the canvas
   if (mouse.pressing("middle")) {

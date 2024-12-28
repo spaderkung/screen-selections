@@ -690,6 +690,7 @@ class BoxRegionSpriteSelector {
 class Snapper {
   #snap_screen = true
   #snap_relative = false
+  GRID_SIZE = [20, 20]
 
   // Getter, setter for snap_screen
   get snap_screen() {
@@ -714,14 +715,18 @@ class Snapper {
   /** Snaps to grid
    * Snaps to grid
    * @param {number[]} pos
-   * @param {number[]} grid_size
+   * @param {number[]} [grid_size]
    */
   static snap_to_grid(pos, grid_size) {
+    if (!grid_size) {
+      throw new TypeError("The grid size must be provided.")
+    }
+
     // Round to discrete coordinates.
     let gs = this.#make_grid(pos, grid_size)
 
     let snapped_pos = []
-    for (let i in pos) {
+    for (let i = 0; i < pos.length; i += 1) {
       snapped_pos.push(Math.floor(pos[i] / gs[i]) * gs[i])
     }
     return snapped_pos
@@ -734,22 +739,34 @@ class Snapper {
    * @returns
    */
   static #make_grid(pos, grid_zize) {
+    if (Array.isArray(pos) === false) {
+      throw new TypeError("The coordinate must be Number[]")
+    }
+
+    let wrong_dimension = false
+    if (Array.isArray(grid_zize) == false) {
+      wrong_dimension = true
+      grid_zize = [grid_zize]
+    }
+    else if (grid_zize.length !== pos.length) {
+      wrong_dimension = true
+    }
+
     let gs = []
-    if (grid_zize.length < pos.length) {
-      for (let i in pos) {
+    if (wrong_dimension) {
+      for (let i = 0; i < pos.length; i += 1) {
         gs.push(grid_zize[0])
       }
-    } else {
-      for (let i in pos) {
+    } 
+    else {
+      for (let i = 0; i < pos.length; i += 1) {
         gs.push(grid_zize[i])
       }
     }
-
     return gs
   }
 
   #reset_options() {
-    console.info("resetting")
     this.#snap_relative = false
     this.#snap_screen = false
   }
@@ -783,6 +800,7 @@ class KeyMoves {
   #collect_input_distance_x = false
   #collect_input_distance_y = false
   #input = ""
+  
 
   /** Provide a collection of objects to have their .x, .y affected by mouse movement
    * Provide a collection of objects to have their .x, .y affected by mouse movement
@@ -791,10 +809,10 @@ class KeyMoves {
   selected = []
 
   /** (optional) Provide a snapper configuration
-   * (optional) Provide a snapper configuration
+   * (optional) Provide a snapper configuration or a default grid size is used.
    * @type {Snapper}
    */
-  snapper = {}
+  snapper = {GRID_SIZE: [20, 20]}
 
   /** True once when movement starts.
    * True once when movement starts.
@@ -876,16 +894,15 @@ class KeyMoves {
         // Will not maintain the relative coordinates of several objects moved together.
         if (kb.pressing("ctrl") || this.snapper.snap_screen) {
           // Snap to screen grid
-          let snapped = Snapper.snap_to_grid([sprite.x, sprite.y], GRID_SIZE)
+          let snapped = Snapper.snap_to_grid([sprite.x, sprite.y], this.snapper.GRID_SIZE)
           sprite.x = snapped[0]
           sprite.y = snapped[1]
-
         } 
         else if (this.snapper.snap_relative) {
           // Snap to movement grid
           // Equates to calculating and snapping the mouse movement, and adding
           // that offset to the original object coordinates.
-          let snapped = Snapper.snap_to_grid([mouse_diff.x, mouse_diff.y], GRID_SIZE)
+          let snapped = Snapper.snap_to_grid([mouse_diff.x, mouse_diff.y], this.snapper.GRID_SIZE)
           sprite.x = sprite.key_moves_start_coords.x + snapped[0]
           sprite.y = sprite.key_moves_start_coords.y + snapped[1]
         }
